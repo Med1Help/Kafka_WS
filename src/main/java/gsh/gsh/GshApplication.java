@@ -16,7 +16,7 @@ public class GshApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GshApplication.class, args);
 	}
-	
+
 	@Bean
 	public CorsFilter corsFilter() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();

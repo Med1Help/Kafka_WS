@@ -4,16 +4,16 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class XlsxService {
@@ -44,5 +44,22 @@ public class XlsxService {
             }
         //}
         return urls;
+    }
+    public void getXlsxTitles(Set<String> titles) throws IOException {
+        XSSFWorkbook workBook = new XSSFWorkbook();
+        XSSFSheet sheet       = workBook.createSheet("Titles");
+        Row row               = sheet.createRow(0);
+        Cell head             = row.createCell(0);
+        head.setCellValue("Title");
+        int rowCount          = 1;
+        for(String title : titles){
+            Row row1  = sheet.createRow(rowCount);
+            Cell cell = row1.createCell(0);
+            cell.setCellValue(title);
+            System.out.println("row "+rowCount+" cell value: "+cell.getStringCellValue());
+            rowCount++;
+        }
+        FileOutputStream fis = new FileOutputStream(new File("titles.xlsx"));
+        workBook.write(fis);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,5 +41,10 @@ public class ProductController {
     @GetMapping("/file")
     public List<String> getXlsx() throws IOException{
         return this.xlsxService.upload("google.xlsx");
+    }
+    @GetMapping("/titles")
+    public boolean getTitles() throws IOException {
+        this.xlsxService.getXlsxTitles(this.service.getTitles());
+        return true;
     }
 }

@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 @Service
 public class productService {
@@ -89,8 +90,8 @@ public class productService {
                         this.productRepo.save(p);
                         System.out.println("updated :: "+title+"  : "+score);
                         //this.template.convertAndSend("/scores",  new VisualObj(p.getId(),p.getUrl(),p.getTitle(),p.getUpdateScore(),p.getUpdateScoreLastDay(),p.getLastDay()));
-                        this.kafkaTemplate.send("products_sold",new VisualObj(p.getId(),p.getUrl(),p.getTitle(),p.getUpdateScore(),p.getUpdateScoreLastDay(),p.getLastDay()));
-                        TimeUnit.SECONDS.sleep(5);
+                        //this.kafkaTemplate.send("products_sold",new VisualObj(p.getId(),p.getUrl(),p.getTitle(),p.getUpdateScore(),p.getUpdateScoreLastDay(),p.getLastDay()));
+                        //TimeUnit.SECONDS.sleep(5);
                     }
 
                 }
@@ -147,6 +148,25 @@ public class productService {
             }
         }
         return products ;
+    }
+    public Set<String> getTitles(){
+        Set<String>  titles = new HashSet<>();
+        String[] noKeys     = {"The","and","or","Uh-Oh!","シーシャ炭 キット","-","_","**","★ ★ ★ ★","Le","味の素","【犬用】","ラムレッグスライス","【Freshmate】","【KEY BRAND】","NO.0","Easy",
+                "NO.3","NO.4","NO.5","NO.6","NO.7","Water","Inc.","–","&","Iphone","(",")","+",".","/",":","At","dual","Au","(without","(ORIGINAL)","✨POWherFUL✨","jar:","Quick","White/Green"
+        };
+        List<String> noKeysL = new ArrayList<>(List.of(noKeys));
+        List<product> oldProducts = ((List<product>) this.productRepo.findAll());
+        for(product p : oldProducts ){
+            if(p.getUpdateScore() >= 1){
+                List<String> keyWords = List.of(p.getTitle().split(" "));
+                for(String keyWord : keyWords){
+                    if(!noKeysL.contains(keyWord)) {
+                         if(!Pattern.matches("[0-9]+", keyWord))titles.add(keyWord);
+                    }
+                }
+            }
+        }
+        return titles;
     }
 
 }
