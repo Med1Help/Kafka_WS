@@ -90,7 +90,7 @@ public class productService {
                         this.productRepo.save(p);
                         System.out.println("updated :: "+title+"  : "+score);
                         //this.template.convertAndSend("/scores",  new VisualObj(p.getId(),p.getUrl(),p.getTitle(),p.getUpdateScore(),p.getUpdateScoreLastDay(),p.getLastDay()));
-                        //this.kafkaTemplate.send("products_sold",new VisualObj(p.getId(),p.getUrl(),p.getTitle(),p.getUpdateScore(),p.getUpdateScoreLastDay(),p.getLastDay()));
+                        this.kafkaTemplate.send("products_sold",new VisualObj(p.getId(),p.getUrl(),p.getTitle(),p.getUpdateScore(),p.getUpdateScoreLastDay(),p.getLastDay()));
                         //TimeUnit.SECONDS.sleep(5);
                     }
 

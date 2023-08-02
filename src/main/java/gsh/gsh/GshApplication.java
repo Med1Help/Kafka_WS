@@ -16,7 +16,12 @@ public class GshApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GshApplication.class, args);
 	}
-
+@Bean
+	CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate){
+		return args -> {
+			for(int i=0 ; i < 100 ; i++)kafkaTemplate.send("titles","title  "+i);
+		};
+	}
 	@Bean
 	public CorsFilter corsFilter() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();

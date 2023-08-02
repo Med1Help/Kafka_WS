@@ -2,6 +2,7 @@ package gsh.gsh.configurations;
 
 import gsh.gsh.models.VisualObj;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
@@ -19,10 +20,18 @@ import java.util.Map;
 
 @Configuration
 public class kafkaConfiguration {
+    @KafkaListener(
+            topics = "titles",
+            groupId = "groupId"
+    )
+    public void listener(String data){
+        System.out.println("li: "+data+" - ");
+    }
 
     @Bean
     public NewTopic productUpToOne(){
-        return TopicBuilder.name("products_solde")
+        TopicBuilder.name("titles").build();
+        return TopicBuilder.name("titles")
                 .build();
     }
     @Value("${spring.kafka.bootstrap-servers}")
